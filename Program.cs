@@ -71,7 +71,7 @@ builder.Services.AddSwaggerGen();
 
 // --- CORS: only the configured frontend origin(s) may call the API. ---
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
-                      ?? new[] { "http://localhost:5173" ,"https://projectmanagementhariprakash.netlify.app/" };
+                      ?? new[] { "http://localhost:5173" ,"https://projectmanagementhariprakash.netlify.app" };
 
 builder.Services.AddCors(options =>
 {
