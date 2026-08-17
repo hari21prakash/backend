@@ -131,13 +131,29 @@ app.MapControllers();
 
 // Apply any pending EF Core migrations automatically on startup in Development,
 // so `dotnet run` "just works" after `dotnet ef database update` has been run once.
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     if (app.Environment.IsDevelopment())
     {
         db.Database.Migrate();
     }
-}
+}*/
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+    try
+    {
+        db.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider
+            .GetRequiredService<ILogger<Program>>();
+
+        logger.LogError(ex, "Database migration failed.");
+        throw;
+    }
+}
 app.Run();
