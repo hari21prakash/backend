@@ -7,11 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-var builder = WebApplication.CreateBuilder(args);
-foreach (var source in builder.Configuration.Sources.OfType<JsonConfigurationSource>())
+var options = new WebApplicationOptions
 {
-    source.ReloadOnChange = false;
-}
+    Args = args
+};
+
+var builder = WebApplication.CreateBuilder(options);
+
+// Production/container configuration does not need file watching.
+builder.Configuration.Sources
+    .OfType<Microsoft.Extensions.Configuration.Json.JsonConfigurationSource>()
+    .ToList()
+    .ForEach(x => x.ReloadOnChange = false);
 
 // Disable configuration file watchers in production/container environments
 builder.Configuration.Sources
