@@ -7,12 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-//var builder = WebApplication.CreateBuilder(args);
-var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+var builder = WebApplication.CreateBuilder(args);
+foreach (var source in builder.Configuration.Sources.OfType<JsonConfigurationSource>())
 {
-    Args = args,
-    EnvironmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"
-});
+    source.ReloadOnChange = false;
+}
 
 // Disable configuration file watchers in production/container environments
 builder.Configuration.Sources
