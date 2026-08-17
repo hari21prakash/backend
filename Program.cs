@@ -7,26 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-var options = new WebApplicationOptions
-{
-    Args = args
-};
-
-var builder = WebApplication.CreateBuilder(options);
-
-// Production/container configuration does not need file watching.
-builder.Configuration.Sources
-    .OfType<Microsoft.Extensions.Configuration.Json.JsonConfigurationSource>()
-    .ToList()
-    .ForEach(x => x.ReloadOnChange = false);
-
-// Disable configuration file watchers in production/container environments
-builder.Configuration.Sources
-    .OfType<Microsoft.Extensions.Configuration.Json.JsonConfigurationSource>()
-    .ToList()
-    .ForEach(source => source.ReloadOnChange = false);
-// --- Connection string: environment variable takes priority over appsettings,
-// so a real password never has to live in source control. ---
+var builder = WebApplication.CreateBuilder(args);
 var connectionString =
     builder.Configuration["ConnectionStrings:DefaultConnection"] ??
     Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
